@@ -7,3 +7,5 @@
 .DS_Store
 
 .ipynb_checkpoints/
+
+data/phishIRIS_DL_Dataset.zip
