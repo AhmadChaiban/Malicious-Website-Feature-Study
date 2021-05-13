@@ -9,3 +9,11 @@
 .ipynb_checkpoints/
 
 data/phishIRIS_DL_Dataset.zip
+
+datasets_for_project/
+
+data/
+
+__MACOSX/
+
+datasets_for_project.zip
