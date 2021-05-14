@@ -17,3 +17,7 @@ data/
 __MACOSX/
 
 datasets_for_project.zip
+
+dataset_20_screens/
+
+geckodriver.log
