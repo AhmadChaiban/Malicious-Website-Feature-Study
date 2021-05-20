@@ -4,6 +4,8 @@ import re
 import urllib
 import geograpy
 import time
+from tqdm import tqdm
+tqdm.pandas()
 
 
 dataset_22 = pd.read_csv('./datasets_for_project/dataset_22.csv')
@@ -49,14 +51,14 @@ def check_at_symbol(url):
         return 1
     return 0
 
-dataset_22_mal['has_IP_in_URL'] = dataset_22_mal['url'].apply(lambda x: 1 if urls_have_ips(x) else 0)
-dataset_22_mal['number_subdomains'] = dataset_22_mal['url'].apply(lambda x: get_number_subdomains(x))
-dataset_22_mal['hostname'] = dataset_22_mal['url'].apply(lambda x: get_hostname(x))
-dataset_22_mal['length_hostname'] = dataset_22_mal['url'].apply(lambda x: len(get_hostname(x)))
-dataset_22_mal['ratio_digits_url'] = dataset_22_mal['url'].apply(lambda x: get_ratio_digits_url(x))
-dataset_22_mal['having_@_in_url'] = dataset_22_mal['url'].apply(lambda x: check_at_symbol(x))
-dataset_22_mal['ratio_digits_hostname'] = dataset_22_mal['hostname'].apply(lambda x: get_ratio_digits_url(x))
-dataset_22_mal['number_underscores'] = dataset_22_mal['url'].apply(lambda x: x.count('_'))
+dataset_22_mal['has_IP_in_URL'] = dataset_22_mal['url'].progress_apply(lambda x: 1 if urls_have_ips(x) else 0)
+dataset_22_mal['number_subdomains'] = dataset_22_mal['url'].progress_apply(lambda x: get_number_subdomains(x))
+dataset_22_mal['hostname'] = dataset_22_mal['url'].progress_apply(lambda x: get_hostname(x))
+dataset_22_mal['length_hostname'] = dataset_22_mal['url'].progress_apply(lambda x: len(get_hostname(x)))
+dataset_22_mal['ratio_digits_url'] = dataset_22_mal['url'].progress_apply(lambda x: get_ratio_digits_url(x))
+dataset_22_mal['having_@_in_url'] = dataset_22_mal['url'].progress_apply(lambda x: check_at_symbol(x))
+dataset_22_mal['ratio_digits_hostname'] = dataset_22_mal['hostname'].progress_apply(lambda x: get_ratio_digits_url(x))
+dataset_22_mal['number_underscores'] = dataset_22_mal['url'].progress_apply(lambda x: x.count('_'))
 
 dataset_22_mal.to_csv('dataset_22_mal_new_features.csv')
 

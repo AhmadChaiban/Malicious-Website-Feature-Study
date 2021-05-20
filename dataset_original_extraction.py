@@ -1,5 +1,8 @@
 import pandas as pd
 import requests
+from tqdm import tqdm
+
+tqdm.pandas()
 
 pd.options.display.max_columns = 500
 
@@ -18,7 +21,7 @@ def check_if_https(url):
         else:
             return 'no'
     except:
-        print('does not work')
+        return 'unknown'
 
 
 def get_tld(url):
@@ -27,7 +30,9 @@ def get_tld(url):
             return tld
     return 'no_tld'
 
-dataset['https'] = dataset['url'].apply(lambda x: check_if_https(x))
-dataset['tld'] = dataset['url'].apply(lambda x: get_tld(x))
+dataset['https'] = dataset['url'].progress_apply(lambda x: check_if_https(x))
+dataset['tld'] = dataset['url'].progress_apply(lambda x: get_tld(x))
+
+print(len(dataset[dataset['https'] == 'unknown']))
 
 print(dataset.head())
