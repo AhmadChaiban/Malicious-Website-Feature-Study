@@ -27,3 +27,7 @@ dataset_20_new_features.csv
 dataset_22_mal_new_features.csv
 
 addon_features/dataset_24_malicious_new_features.csv
+
+cache_dir/
+
+runs/
