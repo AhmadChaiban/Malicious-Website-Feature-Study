@@ -31,3 +31,9 @@ addon_features/dataset_24_malicious_new_features.csv
 cache_dir/
 
 runs/
+
+img_extraction/dataset_20_images/
+
+img_extraction/dataset_20/
+
+img_extraction/dataset_20_random_samples.csv
