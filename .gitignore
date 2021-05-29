@@ -37,3 +37,7 @@ img_extraction/dataset_20_images/
 img_extraction/dataset_20/
 
 img_extraction/dataset_20_random_samples.csv
+
+img_extraction/benign_images.npz
+
+img_extraction/malicious_images.npz
