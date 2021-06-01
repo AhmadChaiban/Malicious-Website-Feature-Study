@@ -41,3 +41,7 @@ img_extraction/dataset_20_random_samples.csv
 img_extraction/benign_images.npz
 
 img_extraction/malicious_images.npz
+
+js_dataset_20
+
+phishtank.csv
