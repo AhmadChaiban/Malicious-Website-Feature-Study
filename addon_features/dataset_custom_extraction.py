@@ -9,11 +9,21 @@ tqdm.pandas()
 pd.options.display.max_columns = 500
 
 
-dataset = pd.read_json('../datasets_for_project/dataset_24/data_phishing_37175.json')
-dataset.columns = ['url']
-dataset['Label'] = 1
+dataset1 = pd.read_csv('new_malicious_1.csv')
+dataset1.columns = ['URL']
+dataset1['Label'] = 1
 
-dataset['url'] = dataset['url'].apply(lambda x: f'http://{x}' if 'http' not in x else x)
+dataset2 = pd.read_csv('new_malicious_2.csv')
+dataset2.columns = ['URL']
+dataset2['Label'] = 1
+
+dataset3 = pd.DataFrame(pd.read_csv('verified_online.csv')['url'])
+dataset3['Label'] = 1
+dataset3.columns = ['URL', 'Label']
+
+dataset = pd.concat([dataset1, dataset2, dataset3], axis=0)
+
+dataset['URL'] = dataset['URL'].apply(lambda x: f'http://{x}' if 'http' not in x else x)
 
 # urls = dataset['url'][dataset['label'] == 1].iloc[0:20]
 #
@@ -54,16 +64,16 @@ def check_at_symbol(url):
         return 1
     return 0
 
-dataset['has_IP_in_URL'] = dataset['url'].progress_apply(lambda x: 1 if urls_have_ips(x) else 0)
-dataset['number_subdomains'] = dataset['url'].progress_apply(lambda x: get_number_subdomains(x))
-dataset['hostname'] = dataset['url'].progress_apply(lambda x: get_hostname(x))
-dataset['length_hostname'] = dataset['url'].progress_apply(lambda x: len(get_hostname(x)))
-dataset['ratio_digits_url'] = dataset['url'].progress_apply(lambda x: get_ratio_digits_url(x))
-dataset['having_@_in_url'] = dataset['url'].progress_apply(lambda x: check_at_symbol(x))
+dataset['has_IP_in_URL'] = dataset['URL'].progress_apply(lambda x: 1 if urls_have_ips(x) else 0)
+dataset['number_subdomains'] = dataset['URL'].progress_apply(lambda x: get_number_subdomains(x))
+dataset['hostname'] = dataset['URL'].progress_apply(lambda x: get_hostname(x))
+dataset['length_hostname'] = dataset['URL'].progress_apply(lambda x: len(get_hostname(x)))
+dataset['ratio_digits_url'] = dataset['URL'].progress_apply(lambda x: get_ratio_digits_url(x))
+dataset['having_@_in_url'] = dataset['URL'].progress_apply(lambda x: check_at_symbol(x))
 dataset['ratio_digits_hostname'] = dataset['hostname'].progress_apply(lambda x: get_ratio_digits_url(x))
-dataset['number_underscores'] = dataset['url'].progress_apply(lambda x: x.count('_'))
+dataset['number_underscores'] = dataset['URL'].progress_apply(lambda x: x.count('_'))
 
-dataset.to_csv('dataset_24_malicious_new_features.csv')
+dataset.to_csv('malicious_new_features.csv')
 
 print(dataset.head(30))
 

@@ -45,3 +45,5 @@ img_extraction/malicious_images.npz
 js_dataset_20
 
 phishtank.csv
+
+*.csv
