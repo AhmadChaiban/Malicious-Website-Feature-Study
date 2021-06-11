@@ -47,3 +47,10 @@ js_dataset_20
 phishtank.csv
 
 *.csv
+
+html_obf
+deobfuscation/html_deobf/
+
+deobfuscation/html_obf2/
+
+deobfuscation/14203.html
