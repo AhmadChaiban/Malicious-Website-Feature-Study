@@ -8,52 +8,35 @@
 
 .ipynb_checkpoints/
 
-data/phishIRIS_DL_Dataset.zip
-
-datasets_for_project/
-
 data/
 
 __MACOSX/
 
 datasets_for_project.zip
 
-dataset_20_screens/
+datasets_of_interest
 
-geckodriver.log
+addon_features/*.csv
 
-dataset_20_new_features.csv
+addon_features/*.txt
 
-dataset_22_mal_new_features.csv
+addon_features/deobfuscation/*
 
-addon_features/dataset_24_malicious_new_features.csv
+!addon_features/deobfuscation/*.py
+
+!addon_features/*.py
+
+data_construction/*
+
+!data_construction/*.py
 
 cache_dir/
 
 runs/
 
-img_extraction/dataset_20_images/
+img_extract/*
 
-img_extraction/dataset_20/
-
-img_extraction/dataset_20_random_samples.csv
-
-img_extraction/benign_images.npz
-
-img_extraction/malicious_images.npz
-
-js_dataset_20
-
-phishtank.csv
-
-*.csv
-
-html_obf
-deobfuscation/html_deobf/
-
-deobfuscation/html_obf2/
-
-deobfuscation/14203.html
+!img_extract/*.py
 
 img_extraction.zip
 
