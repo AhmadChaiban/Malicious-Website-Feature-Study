@@ -56,7 +56,7 @@ def feature_selection(k, scaled_embeddings, name, df_surtur):
     return emb_new
 
 
-def make_classification(features_to_keep, df_surtur):
+def make_classification(features_to_keep, df_surtur, tuning=False):
     
     """ 
     Takes the required columns as input into the dataset 
@@ -85,67 +85,84 @@ def make_classification(features_to_keep, df_surtur):
                 'booster': ['gbtree', 'gblinear', 'dart']
                 
                 }
+    if not tuning:
     
-#     xgboost_model = XGBClassifier(verbosity=0, 
-#                               max_depth=7,
-#                               min_child_weight=1,
-#                               n_estimators=165,
-#                               colsample_bylevel=1,
-#                               colsample_bytree=1, 
-#                               num_parallel_tree=1,
-#                               learning_rate=0.3,
-#                               tree_method='exact', 
-#                               booster='dart',
-#                               gamma=1e-10,
-#                               alpha=0,
-#                               scale_pos_weight= 1,  # 1.375520774687535,
-#                               subsample=1,
-#                               n_jobs=-1)
+        xgboost_model = XGBClassifier(verbosity=0, 
+                                  max_depth=10,
+                                  min_child_weight=10,
+                                  n_estimators=120,
+                                  colsample_bytree=0.6, 
+                                  learning_rate=0.2,
+                                  tree_method='approx', 
+                                  booster='dart',
+                                  gamma=0.01,
+                                  subsample=0.8,
+                                  n_jobs=-1)
+        
+        xgboost_model.fit(X_train, y_train)
+        
+        y_pred_train = xgboost_model.predict(X_train)
+        y_pred_test = xgboost_model.predict(X_test)
+        
+        
+        print(f'Train Accuracy_score = {accuracy_score(y_train, y_pred_train)}')
+        print(f'Test Accuracy_score = {accuracy_score(y_test, y_pred_test)}')
+        print('\n')
+        print(classification_report(y_test, y_pred_test, target_names=['benign', 'malicious'], digits=4))
+        
+        feat_imp = xgboost_model.feature_importances_
+        feat_dict = {}
 
-    xgboost_model = XGBClassifier()
+        for i in range(len(feat_imp)):
+            feat_dict[X.columns[i]] = feat_imp[i]
 
-    folds = 3
-    param_comb = 5
+        feat_dict = {k: v for k, v in sorted(feat_dict.items(), key=lambda item: item[1], reverse=True)}
 
-    skf = StratifiedKFold(n_splits=folds, shuffle = True, random_state = 1001)
+        print("{:<25} {:<25}".format('Feature' ,'Importance'))
+        for k, v in feat_dict.items():
+            num = v
+            print("{:<25} {:<25%}".format(k, num))
+
+        
+
+
+        
+        ## Best {'tree_method': 'approx', 'subsample': 0.8, 'n_estimators': 120, 'min_child_weight': 10, 'max_depth': 10, 
+        ## 'learning_rate': 0.2, 'gamma': 0.01, 'colsample_bytree': 0.6, 'booster': 'dart'}
+        
+    else:
+
+        xgboost_model = XGBClassifier()
+
+        folds = 3
+        param_comb = 5
+
+        skf = StratifiedKFold(n_splits=folds, shuffle = True, random_state = 1001)
+
+        random_search = RandomizedSearchCV(xgboost_model, 
+                                           param_distributions=param_grid, 
+                                           n_iter=param_comb, 
+                                           scoring='roc_auc', 
+                                           n_jobs=-1, 
+                                           cv=skf.split(X_train,y_train), 
+                                           verbose=3, 
+                                           random_state=1001)
+
+        search = random_search.fit(X_train, y_train)
+
+        # xgboost_model.fit(X_train, y_train)
+
+        # y_pred = xgboost_model.predict(X_test)
+
+        y_pred_train = random_search.predict(X_train)
+
+        y_pred_test = random_search.predict(X_test)
+
+        print(f'Train Accuracy_score = {accuracy_score(y_train, y_pred_train)}')
+        print(f'Test Accuracy_score = {accuracy_score(y_test, y_pred_test)}')
+        print('\n')
+        print(classification_report(y_test, y_pred_test, target_names=['benign', 'malicious'], digits=4))
+
+        print(f'best_estimator = {search.best_params_}')
     
-    random_search = RandomizedSearchCV(xgboost_model, 
-                                       param_distributions=param_grid, 
-                                       n_iter=param_comb, 
-                                       scoring='roc_auc', 
-                                       n_jobs=-1, 
-                                       cv=skf.split(X_train,y_train), 
-                                       verbose=3, 
-                                       random_state=1001)
-
-    random_search.fit(X_train, y_train)
-
-    # xgboost_model.fit(X_train, y_train)
-    
-    # y_pred = xgboost_model.predict(X_test)
-
-    y_pred_train = random_search.predict(X_train)
-
-    y_pred_test = random_search.predict(X_test)
-    
-    print(f'Train Accuracy_score = {accuracy_score(y_train, y_pred_train)}')
-    print(f'Test Accuracy_score = {accuracy_score(y_test, y_pred_test)}')
-    print('\n')
-    print(classification_report(y_test, y_pred_test, target_names=['benign', 'malicious'], digits=4))
-    
-    print(f'best_estimator = {}')
-    
-    feat_imp = random_search.feature_importances_
-    feat_dict = {}
-
-    for i in range(len(feat_imp)):
-        feat_dict[X.columns[i]] = feat_imp[i]
-
-    feat_dict = {k: v for k, v in sorted(feat_dict.items(), key=lambda item: item[1], reverse=True)}
-
-    print("{:<25} {:<25}".format('Feature' ,'Importance'))
-    for k, v in feat_dict.items():
-        num = v
-        print("{:<25} {:<25%}".format(k, num))
-
     
