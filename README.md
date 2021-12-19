@@ -15,4 +15,4 @@ There are several notebooks of interest for our study, they are highlighted belo
 * `ML_table.ipynb` is the final notebook where XGBoost was trained on the different feature types and their combinations. 
 
 
-As for the folders `addon_features`, `data_construction`, and `img_extract`, these folders contain the scripts that were used to create the datasets and how those features were extracted. Specifically the `data_construction` folder contains the necessary pipeline to generate the final Dataset `GAWAIN` from the study. 
+As for the folders `addon_features`, `data_construction`, and `img_extract`, these folders contain the scripts that were used to create the datasets and how those features were extracted. Specifically the `data_construction` folder contains the necessary pipeline to generate the final dataset `GAWAIN` from the study. 
